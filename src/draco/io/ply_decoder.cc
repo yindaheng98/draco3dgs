@@ -157,6 +157,67 @@ bool PlyDecoder::ReadPropertiesToAttribute(
   return true;
 }
 
+Status PlyDecoder::ReadGenericPropertiesByNameToAttribute(
+    const PlyElement *vertex_element, const std::vector<std::string> names,
+    const PointIndex::ValueType num_vertices) {
+  std::vector<const PlyProperty *> properties;
+  for (auto &name : names)
+    properties.push_back(vertex_element->GetPropertyByName(name));
+  for (auto prop : properties) {
+    if (!prop)
+      return Status(Status::INVALID_PARAMETER, " properties are missing");
+    if (prop->data_type() != properties[0]->data_type())
+      return Status(Status::INVALID_PARAMETER,
+                    " properties must have the same type");
+  }
+  // TODO: For now assume the Generic Properties types are float32 or int32.
+  const DataType dt = properties[0]->data_type();
+  if (dt != DT_FLOAT32 && dt != DT_INT32) {
+    return Status(Status::INVALID_PARAMETER,
+                  " properties must be of type float32 or int32");
+  }
+
+  GeometryAttribute va;
+  va.Init(GeometryAttribute::GENERIC, nullptr, properties.size(), dt, false,
+          DataTypeLength(dt) * properties.size(), 0);
+  const int att_id = out_point_cloud_->AddAttribute(va, true, num_vertices);
+  if (dt == DT_FLOAT32) {
+    ReadPropertiesToAttribute<float>(
+        properties, out_point_cloud_->attribute(att_id), num_vertices);
+  } else if (dt == DT_INT32) {
+    ReadPropertiesToAttribute<int32_t>(
+        properties, out_point_cloud_->attribute(att_id), num_vertices);
+  }
+  return OkStatus();
+}
+
+Status PlyDecoder::Decode3DGSData(const PlyElement *vertex_element,
+                                  const PointIndex::ValueType num_vertices) {
+  Status status = OkStatus();
+  status = ReadGenericPropertiesByNameToAttribute(
+      vertex_element,
+      std::vector<std::string>({"scale_0", "scale_1", "scale_2"}),
+      num_vertices);
+  if (status.code() != Status::OK)
+    return Status(status.code(), "scale" + status.error_msg_string());
+  status = ReadGenericPropertiesByNameToAttribute(
+      vertex_element,
+      std::vector<std::string>({"rot_0", "rot_1", "rot_2", "rot_3"}),
+      num_vertices);
+  if (status.code() != Status::OK)
+    return Status(status.code(), "rot" + status.error_msg_string());
+  status = ReadGenericPropertiesByNameToAttribute(
+      vertex_element, std::vector<std::string>({"opacity"}), num_vertices);
+  if (status.code() != Status::OK)
+    return Status(status.code(), "opacity" + status.error_msg_string());
+  status = ReadGenericPropertiesByNameToAttribute(
+      vertex_element, std::vector<std::string>({"f_dc_0", "f_dc_1", "f_dc_2"}),
+      num_vertices);
+  if (status.code() != Status::OK)
+    return Status(status.code(), "f_dc" + status.error_msg_string());
+  return status;
+}
+
 Status PlyDecoder::DecodeVertexData(const PlyElement *vertex_element) {
   if (vertex_element == nullptr) {
     return Status(Status::INVALID_PARAMETER, "vertex_element is null");
@@ -314,7 +375,9 @@ Status PlyDecoder::DecodeVertexData(const PlyElement *vertex_element) {
     }
   }
 
-  return OkStatus();
+  Status status = Decode3DGSData(vertex_element, num_vertices);
+
+  return status;
 }
 
 }  // namespace draco
