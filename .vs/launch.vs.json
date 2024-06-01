@@ -1,0 +1,32 @@
+{
+  "version": "0.2.1",
+  "defaults": {},
+  "configurations": [
+    {
+      "type": "native",
+      "name": "draco_encoder.exe",
+      "project": "CMakeLists.txt",
+      "projectTarget": "draco_encoder.exe",
+      "args": [
+        "-i",
+        "scene/point_cloud/iteration_30000/point_cloud.ply",
+        "-o",
+        "scene/point_cloud/iteration_30002/point_cloud.drc",
+        "-point_cloud",
+        "-use_metadata"
+      ]
+    },
+    {
+      "type": "native",
+      "name": "draco_decoder.exe",
+      "project": "CMakeLists.txt",
+      "projectTarget": "draco_decoder.exe",
+      "args": [
+        "-i",
+        "scene/point_cloud/iteration_30002/point_cloud.drc",
+        "-o",
+        "scene/point_cloud/iteration_30002/point_cloud.ply"
+      ]
+    }
+  ]
+}
