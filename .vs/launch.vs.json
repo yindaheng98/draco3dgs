@@ -9,9 +9,9 @@
       "projectTarget": "draco_encoder.exe",
       "args": [
         "-i",
-        "scene/point_cloud/iteration_30000/point_cloud.ply",
+        "${projectDir}/data/scene/point_cloud/iteration_30000/point_cloud.ply",
         "-o",
-        "scene/point_cloud/iteration_30002/point_cloud.drc",
+        "${projectDir}/data/scene/point_cloud/iteration_30002/point_cloud.drc",
         "-point_cloud",
         "-use_metadata"
       ]
@@ -23,9 +23,9 @@
       "projectTarget": "draco_decoder.exe",
       "args": [
         "-i",
-        "scene/point_cloud/iteration_30002/point_cloud.drc",
+        "${projectDir}/data/scene/point_cloud/iteration_30002/point_cloud.drc",
         "-o",
-        "scene/point_cloud/iteration_30002/point_cloud.ply"
+        "${projectDir}/data/scene/point_cloud/iteration_30002/point_cloud.ply"
       ]
     }
   ]
