@@ -18,6 +18,7 @@
 #include "draco/core/status.h"
 #include "draco/io/file_utils.h"
 #include "draco/io/ply_property_reader.h"
+#include "draco/io/ply_3dgs_property.h"
 
 namespace draco {
 namespace {
@@ -194,27 +195,11 @@ Status PlyDecoder::ReadGenericPropertiesByNameToAttribute(
 Status PlyDecoder::Decode3DGSData(const PlyElement *vertex_element,
                                   const PointIndex::ValueType num_vertices) {
   Status status = OkStatus();
-  status = ReadGenericPropertiesByNameToAttribute(
-      vertex_element,
-      std::vector<std::string>({"scale_0", "scale_1", "scale_2"}),
-      num_vertices);
+  for (auto &props : draco::PLY_3DGS_PROPERTY)
+    status = ReadGenericPropertiesByNameToAttribute(vertex_element, props,
+                                                    num_vertices);
   if (status.code() != Status::OK)
-    return Status(status.code(), "scale" + status.error_msg_string());
-  status = ReadGenericPropertiesByNameToAttribute(
-      vertex_element,
-      std::vector<std::string>({"rot_0", "rot_1", "rot_2", "rot_3"}),
-      num_vertices);
-  if (status.code() != Status::OK)
-    return Status(status.code(), "rot" + status.error_msg_string());
-  status = ReadGenericPropertiesByNameToAttribute(
-      vertex_element, std::vector<std::string>({"opacity"}), num_vertices);
-  if (status.code() != Status::OK)
-    return Status(status.code(), "opacity" + status.error_msg_string());
-  status = ReadGenericPropertiesByNameToAttribute(
-      vertex_element, std::vector<std::string>({"f_dc_0", "f_dc_1", "f_dc_2"}),
-      num_vertices);
-  if (status.code() != Status::OK)
-    return Status(status.code(), "f_dc" + status.error_msg_string());
+    return Status(status.code(), "3dgs" + status.error_msg_string());
   return status;
 }
 
