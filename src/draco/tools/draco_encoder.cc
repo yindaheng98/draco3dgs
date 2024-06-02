@@ -246,6 +246,22 @@ int main(int argc, char **argv) {
             "attributes is 30.\n");
         return -1;
       }
+    } else if (!strcmp("-qs", argv[i]) && i < argc_check) {
+      options.scale_3dgs_quantization_bits = StringToInt(argv[++i]);
+      if (options.scale_3dgs_quantization_bits > 30) {
+        printf(
+            "Error: The maximum number of quantization bits for 3dgs scale "
+            "attributes is 30.\n");
+        return -1;
+      }
+    } else if (!strcmp("-qr", argv[i]) && i < argc_check) {
+      options.rotate_3dgs_quantization_bits = StringToInt(argv[++i]);
+      if (options.rotate_3dgs_quantization_bits > 30) {
+        printf(
+            "Error: The maximum number of quantization bits for 3dgs rotate "
+            "attributes is 30.\n");
+        return -1;
+      }
     } else if (!strcmp("-cl", argv[i]) && i < argc_check) {
       options.compression_level = StringToInt(argv[++i]);
     } else if (!strcmp("--skip", argv[i]) && i < argc_check) {

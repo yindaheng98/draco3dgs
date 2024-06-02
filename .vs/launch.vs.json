@@ -14,6 +14,10 @@
         "${projectDir}/data/scene/point_cloud/iteration_30002/point_cloud.drc",
         "-qp",
         "16",
+        "-qs",
+        "5",
+        "-qr",
+        "8",
         "-point_cloud",
         "-use_metadata"
       ]
