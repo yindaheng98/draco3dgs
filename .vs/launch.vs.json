@@ -12,6 +12,8 @@
         "${projectDir}/data/scene/point_cloud/iteration_30000/point_cloud.ply",
         "-o",
         "${projectDir}/data/scene/point_cloud/iteration_30002/point_cloud.drc",
+        "-qp",
+        "16",
         "-point_cloud",
         "-use_metadata"
       ]
