@@ -38,6 +38,8 @@ struct Options {
   bool generic_deleted;
   int scale_3dgs_quantization_bits;
   int rotate_3dgs_quantization_bits;
+  int opacity_3dgs_quantization_bits;
+  int f_dc_3dgs_quantization_bits;
   int compression_level;
   bool preserve_polygons;
   bool use_metadata;
@@ -56,6 +58,8 @@ Options::Options()
       generic_deleted(false),
       scale_3dgs_quantization_bits(8),
       rotate_3dgs_quantization_bits(8),
+      opacity_3dgs_quantization_bits(8),
+      f_dc_3dgs_quantization_bits(8),
       compression_level(7),
       preserve_polygons(false),
       use_metadata(false) {}
@@ -262,6 +266,22 @@ int main(int argc, char **argv) {
             "attributes is 30.\n");
         return -1;
       }
+    } else if (!strcmp("-qo", argv[i]) && i < argc_check) {
+      options.opacity_3dgs_quantization_bits = StringToInt(argv[++i]);
+      if (options.opacity_3dgs_quantization_bits > 30) {
+        printf(
+            "Error: The maximum number of quantization bits for 3dgs opacity "
+            "attributes is 30.\n");
+        return -1;
+      }
+    } else if (!strcmp("-qdc", argv[i]) && i < argc_check) {
+      options.f_dc_3dgs_quantization_bits = StringToInt(argv[++i]);
+      if (options.f_dc_3dgs_quantization_bits > 30) {
+        printf(
+            "Error: The maximum number of quantization bits for 3dgs f_dc "
+            "attributes is 30.\n");
+        return -1;
+      }
     } else if (!strcmp("-cl", argv[i]) && i < argc_check) {
       options.compression_level = StringToInt(argv[++i]);
     } else if (!strcmp("--skip", argv[i]) && i < argc_check) {
@@ -383,6 +403,14 @@ int main(int argc, char **argv) {
   if (options.rotate_3dgs_quantization_bits > 0) {
     encoder.SetAttributeQuantization(draco::GeometryAttribute::ROTATE_3DGS,
                                      options.rotate_3dgs_quantization_bits);
+  }
+  if (options.opacity_3dgs_quantization_bits > 0) {
+    encoder.SetAttributeQuantization(draco::GeometryAttribute::OPACITY_3DGS,
+                                     options.opacity_3dgs_quantization_bits);
+  }
+  if (options.f_dc_3dgs_quantization_bits > 0) {
+    encoder.SetAttributeQuantization(draco::GeometryAttribute::F_DC_3DGS,
+                                     options.f_dc_3dgs_quantization_bits);
   }
   encoder.SetSpeedOptions(speed, speed);
 

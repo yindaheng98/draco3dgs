@@ -18,6 +18,8 @@
         "5",
         "-qr",
         "8",
+        "-qo",
+        "6",
         "-point_cloud",
         "-use_metadata"
       ]

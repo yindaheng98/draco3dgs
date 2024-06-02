@@ -4,13 +4,15 @@
   { "scale_0", "scale_1", "scale_2" }
 #define PLY_3DGS_PROPERTY_NAMES_ROTATE \
   { "rot_0", "rot_1", "rot_2", "rot_3" }
+#define PLY_3DGS_PROPERTY_NAMES_OPACITY \
+  { "opacity" }
+#define PLY_3DGS_PROPERTY_NAMES_F_DC \
+  { "f_dc_0", "f_dc_1", "f_dc_2" }
 #include <string>
 #include <vector>
 
 namespace draco {
 const std::vector<std::vector<std::string>> PLY_3DGS_PROPERTY = {
-    {"opacity"},
-    {"f_dc_0", "f_dc_1", "f_dc_2"},
     {"f_rest_0",  "f_rest_1",  "f_rest_2",  "f_rest_3",  "f_rest_4",
      "f_rest_5",  "f_rest_6",  "f_rest_7",  "f_rest_8",  "f_rest_9",
      "f_rest_10", "f_rest_11", "f_rest_12", "f_rest_13", "f_rest_14",
