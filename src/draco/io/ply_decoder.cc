@@ -195,6 +195,16 @@ Status PlyDecoder::ReadNamedPropertiesByNameToAttribute(
 
 Status PlyDecoder::Decode3DGSData(const PlyElement *vertex_element) {
   Status status = OkStatus();
+  status = ReadNamedPropertiesByNameToAttribute(vertex_element,
+                                                PLY_3DGS_PROPERTY_NAMES_SCALE,
+                                                GeometryAttribute::SCALE_3DGS);
+  if (status.code() != Status::OK)
+    return Status(status.code(), "3dgs scale" + status.error_msg_string());
+  status = ReadNamedPropertiesByNameToAttribute(vertex_element,
+                                                PLY_3DGS_PROPERTY_NAMES_ROTATE,
+                                                GeometryAttribute::ROTATE_3DGS);
+  if (status.code() != Status::OK)
+    return Status(status.code(), "3dgs rotate" + status.error_msg_string());
   for (auto &props : draco::PLY_3DGS_PROPERTY)
     status = ReadNamedPropertiesByNameToAttribute(vertex_element, props,
                                                   GeometryAttribute::GENERIC);
@@ -361,7 +371,6 @@ Status PlyDecoder::DecodeVertexData(const PlyElement *vertex_element) {
   }
 
   Status status = Decode3DGSData(vertex_element);
-
   return status;
 }
 

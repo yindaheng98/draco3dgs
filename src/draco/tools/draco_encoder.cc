@@ -36,6 +36,8 @@ struct Options {
   bool normals_deleted;
   int generic_quantization_bits;
   bool generic_deleted;
+  int scale_3dgs_quantization_bits;
+  int rotate_3dgs_quantization_bits;
   int compression_level;
   bool preserve_polygons;
   bool use_metadata;
@@ -52,6 +54,8 @@ Options::Options()
       normals_deleted(false),
       generic_quantization_bits(8),
       generic_deleted(false),
+      scale_3dgs_quantization_bits(8),
+      rotate_3dgs_quantization_bits(8),
       compression_level(7),
       preserve_polygons(false),
       use_metadata(false) {}
@@ -355,6 +359,14 @@ int main(int argc, char **argv) {
   if (options.generic_quantization_bits > 0) {
     encoder.SetAttributeQuantization(draco::GeometryAttribute::GENERIC,
                                      options.generic_quantization_bits);
+  }
+  if (options.scale_3dgs_quantization_bits > 0) {
+    encoder.SetAttributeQuantization(draco::GeometryAttribute::SCALE_3DGS,
+                                     options.scale_3dgs_quantization_bits);
+  }
+  if (options.rotate_3dgs_quantization_bits > 0) {
+    encoder.SetAttributeQuantization(draco::GeometryAttribute::ROTATE_3DGS,
+                                     options.rotate_3dgs_quantization_bits);
   }
   encoder.SetSpeedOptions(speed, speed);
 
