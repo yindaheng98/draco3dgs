@@ -19,6 +19,7 @@
 
 #include "draco/io/file_writer_factory.h"
 #include "draco/io/file_writer_interface.h"
+#include "draco/io/ply_3dgs_property.h"
 
 namespace draco {
 
@@ -125,6 +126,14 @@ bool PlyEncoder::EncodeInternal() {
           << std::endl;
     }
   }
+  for (int i = 0; i < draco::PLY_3DGS_PROPERTY.size(); i++) {
+    std::vector<std::string> names = draco::PLY_3DGS_PROPERTY[i];
+    const int generic_att_id =
+        in_point_cloud_->GetNamedAttributeId(GeometryAttribute::GENERIC, i);
+    for (std::string name : names)
+      out << "property " << GetAttributeDataType(generic_att_id) << " " << name
+          << std::endl;
+  }
   if (in_mesh_) {
     out << "element face " << in_mesh_->num_faces() << std::endl;
     out << "property list uchar int vertex_indices" << std::endl;
@@ -157,6 +166,14 @@ bool PlyEncoder::EncodeInternal() {
       const auto *const color_att = in_point_cloud_->attribute(color_att_id);
       buffer()->Encode(color_att->GetAddress(color_att->mapped_index(v)),
                        color_att->byte_stride());
+    }
+    for (int i = 0; i < draco::PLY_3DGS_PROPERTY.size(); i++) {
+      const int generic_att_id =
+          in_point_cloud_->GetNamedAttributeId(GeometryAttribute::GENERIC, i);
+      const auto *const generic_att =
+          in_point_cloud_->attribute(generic_att_id);
+      buffer()->Encode(generic_att->GetAddress(generic_att->mapped_index(v)),
+                       generic_att->byte_stride());
     }
   }
 
