@@ -158,9 +158,9 @@ bool PlyDecoder::ReadPropertiesToAttribute(
   return true;
 }
 
-Status PlyDecoder::ReadGenericPropertiesByNameToAttribute(
+Status PlyDecoder::ReadNamedPropertiesByNameToAttribute(
     const PlyElement *vertex_element, const std::vector<std::string> names,
-    const PointIndex::ValueType num_vertices) {
+    const GeometryAttribute::Type attribute_type) {
   std::vector<const PlyProperty *> properties;
   for (auto &name : names)
     properties.push_back(vertex_element->GetPropertyByName(name));
@@ -178,8 +178,9 @@ Status PlyDecoder::ReadGenericPropertiesByNameToAttribute(
                   " properties must be of type float32 or int32");
   }
 
+  const PointIndex::ValueType num_vertices = vertex_element->num_entries();
   GeometryAttribute va;
-  va.Init(GeometryAttribute::GENERIC, nullptr, properties.size(), dt, false,
+  va.Init(attribute_type, nullptr, properties.size(), dt, false,
           DataTypeLength(dt) * properties.size(), 0);
   const int att_id = out_point_cloud_->AddAttribute(va, true, num_vertices);
   if (dt == DT_FLOAT32) {
@@ -192,12 +193,11 @@ Status PlyDecoder::ReadGenericPropertiesByNameToAttribute(
   return OkStatus();
 }
 
-Status PlyDecoder::Decode3DGSData(const PlyElement *vertex_element,
-                                  const PointIndex::ValueType num_vertices) {
+Status PlyDecoder::Decode3DGSData(const PlyElement *vertex_element) {
   Status status = OkStatus();
   for (auto &props : draco::PLY_3DGS_PROPERTY)
-    status = ReadGenericPropertiesByNameToAttribute(vertex_element, props,
-                                                    num_vertices);
+    status = ReadNamedPropertiesByNameToAttribute(vertex_element, props,
+                                                  GeometryAttribute::GENERIC);
   if (status.code() != Status::OK)
     return Status(status.code(), "3dgs" + status.error_msg_string());
   return status;
@@ -360,7 +360,7 @@ Status PlyDecoder::DecodeVertexData(const PlyElement *vertex_element) {
     }
   }
 
-  Status status = Decode3DGSData(vertex_element, num_vertices);
+  Status status = Decode3DGSData(vertex_element);
 
   return status;
 }

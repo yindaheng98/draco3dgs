@@ -50,12 +50,10 @@ class PlyDecoder {
  private:
   Status DecodeFaceData(const PlyElement *face_element);
   Status DecodeVertexData(const PlyElement *vertex_element);
-  Status ReadGenericPropertiesByNameToAttribute(
-      const PlyElement *vertex_element,
-      const std::vector<std::string> names,
-      const PointIndex::ValueType num_vertices);
-  Status Decode3DGSData(const PlyElement *vertex_element,
-                        const PointIndex::ValueType num_vertices);
+  Status ReadNamedPropertiesByNameToAttribute(
+      const PlyElement *vertex_element, const std::vector<std::string> names,
+      const GeometryAttribute::Type attribute_type);
+  Status Decode3DGSData(const PlyElement *vertex_element);
 
   template <typename DataTypeT>
   bool ReadPropertiesToAttribute(
