@@ -62,6 +62,40 @@ bool PlyEncoder::EncodeToBuffer(const Mesh &mesh, EncoderBuffer *out_buffer) {
   in_mesh_ = &mesh;
   return EncodeToBuffer(static_cast<const PointCloud &>(mesh), out_buffer);
 }
+void PlyEncoder::WriteHeader(std::stringstream &out,
+                             const std::vector<std::string> names,
+                             const GeometryAttribute::Type attribute_type,
+                             int i) {
+  const int generic_att_id =
+      in_point_cloud_->GetNamedAttributeId(attribute_type, i);
+  for (std::string name : names)
+    out << "property " << GetAttributeDataType(generic_att_id) << " " << name
+        << std::endl;
+}
+void PlyEncoder::Write3DGSHeaders(std::stringstream &out) {
+  WriteHeader(out, PLY_3DGS_PROPERTY_NAMES_SCALE,
+              GeometryAttribute::SCALE_3DGS);
+  WriteHeader(out, PLY_3DGS_PROPERTY_NAMES_ROTATE,
+              GeometryAttribute::ROTATE_3DGS);
+  for (int i = 0; i < draco::PLY_3DGS_PROPERTY.size(); i++) {
+    WriteHeader(out, draco::PLY_3DGS_PROPERTY[i], GeometryAttribute::GENERIC,
+                i);
+  }
+}
+void PlyEncoder::EncodeData(PointIndex v,
+                            const GeometryAttribute::Type attribute_type,
+                            int i) {
+  const int att_id = in_point_cloud_->GetNamedAttributeId(attribute_type, i);
+  const auto *const att = in_point_cloud_->attribute(att_id);
+  buffer()->Encode(att->GetAddress(att->mapped_index(v)), att->byte_stride());
+}
+void PlyEncoder::Encode3DGSData(PointIndex v) {
+  EncodeData(v, GeometryAttribute::SCALE_3DGS);
+  EncodeData(v, GeometryAttribute::ROTATE_3DGS);
+  for (int i = 0; i < draco::PLY_3DGS_PROPERTY.size(); i++) {
+    EncodeData(v, GeometryAttribute::GENERIC, i);
+  }
+}
 bool PlyEncoder::EncodeInternal() {
   // Write PLY header.
   // TODO(ostava): Currently works only for xyz positions and rgb(a) colors.
@@ -126,14 +160,7 @@ bool PlyEncoder::EncodeInternal() {
           << std::endl;
     }
   }
-  for (int i = 0; i < draco::PLY_3DGS_PROPERTY.size(); i++) {
-    std::vector<std::string> names = draco::PLY_3DGS_PROPERTY[i];
-    const int generic_att_id =
-        in_point_cloud_->GetNamedAttributeId(GeometryAttribute::GENERIC, i);
-    for (std::string name : names)
-      out << "property " << GetAttributeDataType(generic_att_id) << " " << name
-          << std::endl;
-  }
+  Write3DGSHeaders(out);
   if (in_mesh_) {
     out << "element face " << in_mesh_->num_faces() << std::endl;
     out << "property list uchar int vertex_indices" << std::endl;
@@ -167,14 +194,7 @@ bool PlyEncoder::EncodeInternal() {
       buffer()->Encode(color_att->GetAddress(color_att->mapped_index(v)),
                        color_att->byte_stride());
     }
-    for (int i = 0; i < draco::PLY_3DGS_PROPERTY.size(); i++) {
-      const int generic_att_id =
-          in_point_cloud_->GetNamedAttributeId(GeometryAttribute::GENERIC, i);
-      const auto *const generic_att =
-          in_point_cloud_->attribute(generic_att_id);
-      buffer()->Encode(generic_att->GetAddress(generic_att->mapped_index(v)),
-                       generic_att->byte_stride());
-    }
+    Encode3DGSData(v);
   }
 
   if (in_mesh_) {

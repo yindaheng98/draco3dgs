@@ -53,6 +53,8 @@ class GeometryAttribute {
     NORMAL,
     COLOR,
     TEX_COORD,
+    SCALE_3DGS,   // For 3DGS
+    ROTATE_3DGS,  // For 3DGS
     // A special id used to mark attributes that are not assigned to any known
     // predefined use case. Such attributes are often used for a shader specific
     // data.

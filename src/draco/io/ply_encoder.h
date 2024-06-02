@@ -41,6 +41,12 @@ class PlyEncoder {
   bool ExitAndCleanup(bool return_value);
 
  private:
+  void WriteHeader(std::stringstream &out, const std::vector<std::string> names,
+                   const GeometryAttribute::Type attribute_type, int i = 0);
+  void Write3DGSHeaders(std::stringstream &out);
+  void EncodeData(PointIndex v, const GeometryAttribute::Type attribute_type,
+                  int i = 0);
+  void Encode3DGSData(PointIndex v);
   const char *GetAttributeDataType(int attribute);
 
   EncoderBuffer *out_buffer_;
