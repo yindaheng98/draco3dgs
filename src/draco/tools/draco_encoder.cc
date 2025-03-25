@@ -37,9 +37,9 @@ struct Options {
   int generic_quantization_bits;
   bool generic_deleted;
   int scale_3dgs_quantization_bits;
-  int rotate_3dgs_quantization_bits;
+  int rotation_3dgs_quantization_bits;
   int opacity_3dgs_quantization_bits;
-  int f_dc_3dgs_quantization_bits;
+  int feature_dc_3dgs_quantization_bits;
   int compression_level;
   bool preserve_polygons;
   bool use_metadata;
@@ -57,9 +57,9 @@ Options::Options()
       generic_quantization_bits(8),
       generic_deleted(false),
       scale_3dgs_quantization_bits(8),
-      rotate_3dgs_quantization_bits(8),
+      rotation_3dgs_quantization_bits(8),
       opacity_3dgs_quantization_bits(8),
-      f_dc_3dgs_quantization_bits(8),
+      feature_dc_3dgs_quantization_bits(8),
       compression_level(7),
       preserve_polygons(false),
       use_metadata(false) {}
@@ -259,10 +259,10 @@ int main(int argc, char **argv) {
         return -1;
       }
     } else if (!strcmp("-qrotation", argv[i]) && i < argc_check) {
-      options.rotate_3dgs_quantization_bits = StringToInt(argv[++i]);
-      if (options.rotate_3dgs_quantization_bits > 30) {
+      options.rotation_3dgs_quantization_bits = StringToInt(argv[++i]);
+      if (options.rotation_3dgs_quantization_bits > 30) {
         printf(
-            "Error: The maximum number of quantization bits for 3dgs rotate "
+            "Error: The maximum number of quantization bits for 3dgs rotation "
             "attributes is 30.\n");
         return -1;
       }
@@ -275,10 +275,10 @@ int main(int argc, char **argv) {
         return -1;
       }
     } else if (!strcmp("-qfeaturedc", argv[i]) && i < argc_check) {
-      options.f_dc_3dgs_quantization_bits = StringToInt(argv[++i]);
-      if (options.f_dc_3dgs_quantization_bits > 30) {
+      options.feature_dc_3dgs_quantization_bits = StringToInt(argv[++i]);
+      if (options.feature_dc_3dgs_quantization_bits > 30) {
         printf(
-            "Error: The maximum number of quantization bits for 3dgs f_dc "
+            "Error: The maximum number of quantization bits for 3dgs DC features "
             "attributes is 30.\n");
         return -1;
       }
@@ -400,17 +400,17 @@ int main(int argc, char **argv) {
     encoder.SetAttributeQuantization(draco::GeometryAttribute::SCALE_3DGS,
                                      options.scale_3dgs_quantization_bits);
   }
-  if (options.rotate_3dgs_quantization_bits > 0) {
-    encoder.SetAttributeQuantization(draco::GeometryAttribute::ROTATE_3DGS,
-                                     options.rotate_3dgs_quantization_bits);
+  if (options.rotation_3dgs_quantization_bits > 0) {
+    encoder.SetAttributeQuantization(draco::GeometryAttribute::ROTATION_3DGS,
+                                     options.rotation_3dgs_quantization_bits);
   }
   if (options.opacity_3dgs_quantization_bits > 0) {
     encoder.SetAttributeQuantization(draco::GeometryAttribute::OPACITY_3DGS,
                                      options.opacity_3dgs_quantization_bits);
   }
-  if (options.f_dc_3dgs_quantization_bits > 0) {
-    encoder.SetAttributeQuantization(draco::GeometryAttribute::F_DC_3DGS,
-                                     options.f_dc_3dgs_quantization_bits);
+  if (options.feature_dc_3dgs_quantization_bits > 0) {
+    encoder.SetAttributeQuantization(draco::GeometryAttribute::FEATURE_DC_3DGS,
+                                     options.feature_dc_3dgs_quantization_bits);
   }
   encoder.SetSpeedOptions(speed, speed);
 
