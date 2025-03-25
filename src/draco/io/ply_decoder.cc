@@ -215,6 +215,11 @@ Status PlyDecoder::Decode3DGSData(const PlyElement *vertex_element) {
                                                 GeometryAttribute::FEATURE_DC_3DGS);
   if (status.code() != Status::OK)
     return Status(status.code(), "3dgs DC features" + status.error_msg_string());
+    status = ReadNamedPropertiesByNameToAttribute(vertex_element,
+                                                  PLY_3DGS_PROPERTY_NAMES_FEATURE_REST,
+                                                  GeometryAttribute::FEATURE_REST_3DGS);
+    if (status.code() != Status::OK)
+      return Status(status.code(), "3dgs rest features" + status.error_msg_string());
   for (auto &props : draco::PLY_3DGS_PROPERTY) {
     status = ReadNamedPropertiesByNameToAttribute(vertex_element, props,
                                                   GeometryAttribute::GENERIC);

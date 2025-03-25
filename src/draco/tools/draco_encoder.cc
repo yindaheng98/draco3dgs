@@ -40,6 +40,7 @@ struct Options {
   int rotation_3dgs_quantization_bits;
   int opacity_3dgs_quantization_bits;
   int feature_dc_3dgs_quantization_bits;
+  int feature_rest_3dgs_quantization_bits;
   int compression_level;
   bool preserve_polygons;
   bool use_metadata;
@@ -60,6 +61,7 @@ Options::Options()
       rotation_3dgs_quantization_bits(8),
       opacity_3dgs_quantization_bits(8),
       feature_dc_3dgs_quantization_bits(8),
+      feature_rest_3dgs_quantization_bits(8),
       compression_level(7),
       preserve_polygons(false),
       use_metadata(false) {}
@@ -282,6 +284,14 @@ int main(int argc, char **argv) {
             "attributes is 30.\n");
         return -1;
       }
+    } else if (!strcmp("-qfeaturerest", argv[i]) && i < argc_check) {
+      options.feature_rest_3dgs_quantization_bits = StringToInt(argv[++i]);
+      if (options.feature_rest_3dgs_quantization_bits > 30) {
+        printf(
+            "Error: The maximum number of quantization bits for 3dgs DC features "
+            "attributes is 30.\n");
+        return -1;
+      }
     } else if (!strcmp("-cl", argv[i]) && i < argc_check) {
       options.compression_level = StringToInt(argv[++i]);
     } else if (!strcmp("--skip", argv[i]) && i < argc_check) {
@@ -411,6 +421,10 @@ int main(int argc, char **argv) {
   if (options.feature_dc_3dgs_quantization_bits > 0) {
     encoder.SetAttributeQuantization(draco::GeometryAttribute::FEATURE_DC_3DGS,
                                      options.feature_dc_3dgs_quantization_bits);
+  }
+  if (options.feature_rest_3dgs_quantization_bits > 0) {
+    encoder.SetAttributeQuantization(draco::GeometryAttribute::FEATURE_REST_3DGS,
+                                     options.feature_rest_3dgs_quantization_bits);
   }
   encoder.SetSpeedOptions(speed, speed);
 

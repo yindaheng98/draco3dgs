@@ -57,6 +57,7 @@ class GeometryAttribute {
     ROTATION_3DGS,   // For 3DGS
     OPACITY_3DGS,  // For 3DGS
     FEATURE_DC_3DGS,     // For 3DGS
+    FEATURE_REST_3DGS,     // For 3DGS
     // A special id used to mark attributes that are not assigned to any known
     // predefined use case. Such attributes are often used for a shader specific
     // data.

@@ -79,7 +79,10 @@ void PlyEncoder::Write3DGSHeaders(std::stringstream &out) {
               GeometryAttribute::ROTATION_3DGS);
   WriteHeader(out, PLY_3DGS_PROPERTY_NAMES_OPACITY,
               GeometryAttribute::OPACITY_3DGS);
-  WriteHeader(out, PLY_3DGS_PROPERTY_NAMES_FEATURE_DC, GeometryAttribute::FEATURE_DC_3DGS);
+  WriteHeader(out, PLY_3DGS_PROPERTY_NAMES_FEATURE_DC,
+              GeometryAttribute::FEATURE_DC_3DGS);
+  WriteHeader(out, PLY_3DGS_PROPERTY_NAMES_FEATURE_REST,
+              GeometryAttribute::FEATURE_REST_3DGS);
   for (int i = 0; i < draco::PLY_3DGS_PROPERTY.size(); i++) {
     WriteHeader(out, draco::PLY_3DGS_PROPERTY[i], GeometryAttribute::GENERIC,
                 i);
@@ -97,6 +100,7 @@ void PlyEncoder::Encode3DGSData(PointIndex v) {
   EncodeData(v, GeometryAttribute::ROTATION_3DGS);
   EncodeData(v, GeometryAttribute::OPACITY_3DGS);
   EncodeData(v, GeometryAttribute::FEATURE_DC_3DGS);
+  EncodeData(v, GeometryAttribute::FEATURE_REST_3DGS);
   for (int i = 0; i < draco::PLY_3DGS_PROPERTY.size(); i++) {
     EncodeData(v, GeometryAttribute::GENERIC, i);
   }

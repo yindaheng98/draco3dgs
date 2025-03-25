@@ -14,8 +14,7 @@
 #include <vector>
 
 namespace draco {
-const std::vector<std::vector<std::string>> PLY_3DGS_PROPERTY = {
-    PLY_3DGS_PROPERTY_NAMES_FEATURE_REST};
+const std::vector<std::vector<std::string>> PLY_3DGS_PROPERTY = {};
 }  // namespace draco
 
 #endif  // DRACO_IO_PLY_PROPERTY_WRITER_H_
