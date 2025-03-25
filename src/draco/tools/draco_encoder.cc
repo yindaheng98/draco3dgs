@@ -250,7 +250,7 @@ int main(int argc, char **argv) {
             "attributes is 30.\n");
         return -1;
       }
-    } else if (!strcmp("-qs", argv[i]) && i < argc_check) {
+    } else if (!strcmp("-qscale", argv[i]) && i < argc_check) {
       options.scale_3dgs_quantization_bits = StringToInt(argv[++i]);
       if (options.scale_3dgs_quantization_bits > 30) {
         printf(
@@ -258,7 +258,7 @@ int main(int argc, char **argv) {
             "attributes is 30.\n");
         return -1;
       }
-    } else if (!strcmp("-qr", argv[i]) && i < argc_check) {
+    } else if (!strcmp("-qrotation", argv[i]) && i < argc_check) {
       options.rotate_3dgs_quantization_bits = StringToInt(argv[++i]);
       if (options.rotate_3dgs_quantization_bits > 30) {
         printf(
@@ -266,7 +266,7 @@ int main(int argc, char **argv) {
             "attributes is 30.\n");
         return -1;
       }
-    } else if (!strcmp("-qo", argv[i]) && i < argc_check) {
+    } else if (!strcmp("-qopacity", argv[i]) && i < argc_check) {
       options.opacity_3dgs_quantization_bits = StringToInt(argv[++i]);
       if (options.opacity_3dgs_quantization_bits > 30) {
         printf(
@@ -274,7 +274,7 @@ int main(int argc, char **argv) {
             "attributes is 30.\n");
         return -1;
       }
-    } else if (!strcmp("-qdc", argv[i]) && i < argc_check) {
+    } else if (!strcmp("-qfeaturedc", argv[i]) && i < argc_check) {
       options.f_dc_3dgs_quantization_bits = StringToInt(argv[++i]);
       if (options.f_dc_3dgs_quantization_bits > 30) {
         printf(
