@@ -173,22 +173,55 @@ Status PlyDecoder::ReadNamedPropertiesByNameToAttribute(
   }
   // TODO: For now assume the Generic Properties types are float32 or int32.
   const DataType dt = properties[0]->data_type();
-  if (dt != DT_FLOAT32 && dt != DT_INT32) {
-    return Status(Status::INVALID_PARAMETER,
-                  " properties must be of type float32 or int32");
-  }
 
   const PointIndex::ValueType num_vertices = vertex_element->num_entries();
   GeometryAttribute va;
   va.Init(attribute_type, nullptr, properties.size(), dt, false,
           DataTypeLength(dt) * properties.size(), 0);
   const int att_id = out_point_cloud_->AddAttribute(va, true, num_vertices);
-  if (dt == DT_FLOAT32) {
-    ReadPropertiesToAttribute<float>(
-        properties, out_point_cloud_->attribute(att_id), num_vertices);
-  } else if (dt == DT_INT32) {
-    ReadPropertiesToAttribute<int32_t>(
-        properties, out_point_cloud_->attribute(att_id), num_vertices);
+  switch (dt) {
+    case DT_INT8:
+      ReadPropertiesToAttribute<int8_t>(
+          properties, out_point_cloud_->attribute(att_id), num_vertices);
+      break;
+    case DT_UINT8:
+      ReadPropertiesToAttribute<uint8_t>(
+          properties, out_point_cloud_->attribute(att_id), num_vertices);
+      break;
+    case DT_INT16:
+      ReadPropertiesToAttribute<int16_t>(
+          properties, out_point_cloud_->attribute(att_id), num_vertices);
+      break;
+    case DT_UINT16:
+      ReadPropertiesToAttribute<uint16_t>(
+          properties, out_point_cloud_->attribute(att_id), num_vertices);
+      break;
+    case DT_INT32:
+      ReadPropertiesToAttribute<int32_t>(
+          properties, out_point_cloud_->attribute(att_id), num_vertices);
+      break;
+    case DT_UINT32:
+      ReadPropertiesToAttribute<uint32_t>(
+          properties, out_point_cloud_->attribute(att_id), num_vertices);
+      break;
+    case DT_INT64:
+      ReadPropertiesToAttribute<int64_t>(
+          properties, out_point_cloud_->attribute(att_id), num_vertices);
+      break;
+    case DT_UINT64:
+      ReadPropertiesToAttribute<uint64_t>(
+          properties, out_point_cloud_->attribute(att_id), num_vertices);
+      break;
+    case DT_FLOAT32:
+      ReadPropertiesToAttribute<float>(
+          properties, out_point_cloud_->attribute(att_id), num_vertices);
+      break;
+    case DT_FLOAT64:
+      ReadPropertiesToAttribute<double>(
+          properties, out_point_cloud_->attribute(att_id), num_vertices);
+      break;
+    default:
+      return Status(Status::INVALID_PARAMETER, " properties type invalid");
   }
   return OkStatus();
 }

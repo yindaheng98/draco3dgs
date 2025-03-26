@@ -247,12 +247,22 @@ bool PlyEncoder::ExitAndCleanup(bool return_value) {
 const char *PlyEncoder::GetAttributeDataType(int attribute) {
   // TODO(ostava): Add support for more types.
   switch (in_point_cloud_->attribute(attribute)->data_type()) {
-    case DT_FLOAT32:
-      return "float";
+    case DT_INT8:
+      return "int8";
     case DT_UINT8:
-      return "uchar";
+      return "uint8";
+    case DT_INT16:
+      return "int16";
+    case DT_UINT16:
+      return "uint16";
     case DT_INT32:
-      return "int";
+      return "int32";
+    case DT_UINT32:
+      return "uint32";
+    case DT_FLOAT32:
+      return "float32";
+    case DT_FLOAT64:
+      return "float64";
     default:
       break;
   }
