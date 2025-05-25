@@ -6,6 +6,11 @@ enum draco_GeometryAttribute_Type {
   "draco_GeometryAttribute::NORMAL",
   "draco_GeometryAttribute::COLOR",
   "draco_GeometryAttribute::TEX_COORD",
+  "draco_GeometryAttribute::SCALE_3DGS",
+  "draco_GeometryAttribute::ROTATION_3DGS",
+  "draco_GeometryAttribute::OPACITY_3DGS",
+  "draco_GeometryAttribute::FEATURE_DC_3DGS",
+  "draco_GeometryAttribute::FEATURE_REST_3DGS",
   "draco_GeometryAttribute::GENERIC"
 };
 
